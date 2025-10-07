@@ -1,0 +1,143 @@
+/** @format */
+
+body {
+  background: #1f1f1f;
+  color: white;
+  overflow: hidden;
+}
+
+h1 {
+  text-align: center;
+}
+
+.todo-wrapper {
+  background: #232323;
+  padding: 2%;
+  width: fit-content;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 3%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.2);
+}
+
+.input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid gray;
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-radius: 4px;
+}
+
+.input-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 25px;
+}
+
+.input-item label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.input-item input {
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  width: 250px;
+}
+
+.input-item input:focus {
+  outline: none;
+  outline: 1px solid rgb(0, 255, 221);
+}
+
+.primaryBtn {
+  background: rgb(133, 237, 73);
+  color: white;
+  border: none;
+  margin-top: 25px;
+  padding: 5px;
+  border-radius: 4px;
+  width: 60px;
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+}
+
+.primaryBtn:hover {
+  background: #232323;
+  font-weight: bold;
+}
+
+.secondaryBtn {
+  background: #232323;
+  color: white;
+  border: none;
+  margin-top: 25px;
+  padding: 5px;
+  border-radius: 4px;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.active {
+  background: rgb(133, 237, 73);
+}
+
+.btn {
+  margin-bottom: 15px;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #404141;
+  padding: 25px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 3px rgba(9, 9, 9, 0.2);
+}
+
+.todo-item h3 {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 0;
+  color: rgb(133, 237, 73);
+}
+
+.todo-item p {
+  font-size: 14px;
+  margin-top: 8px;
+  color: white;
+}
+
+.icon {
+  font-size: 35px;
+  cursor: pointer;
+}
+
+.icon:hover {
+  color: red;
+}
+
+.check-icon {
+  font-size: 35px;
+  cursor: pointer;
+  margin-left: 10px;
+  color: rgb(133, 237, 73);
+}
+
+.check-icon:hover {
+  color: green;
+}
