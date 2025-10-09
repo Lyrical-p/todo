@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
 import { TiInputChecked } from 'react-icons/ti'
 import './App.css'
@@ -10,6 +10,7 @@ function App() {
   const [allTodos, setTodos] = useState([])
   const [newTitle, setNewTitle] = useState('')
   const [newDesc, setNewDesc] = useState('')
+  const [completedTodos, setCompletedTodos] = useState([])
 
   const handleAddTodo = () => {
     let newTodo = {
@@ -20,7 +21,65 @@ function App() {
     let updatedTodo = [...allTodos]
     updatedTodo.push(newTodo)
     setTodos(updatedTodo)
+    localStorage.setItem('todolist', JSON.stringify(updatedTodo))
+
+    setNewTitle('')
+    setNewDesc('')
   }
+
+  const handleDelete = (index) => {
+    let removeTodo = [...allTodos]
+    removeTodo.splice(index, 1)
+
+    localStorage.setItem('todolist', JSON.stringify(removeTodo))
+    setTodos(removeTodo)
+  }
+
+  const handleCompleted = (index) => {
+    let now = new Date()
+    let dd = now.getDate()
+    let mm = now.getMonth() + 1
+    let yyyy = now.getFullYear()
+    let hh = now.getHours()
+    let min = now.getMinutes()
+    let sec = now.getSeconds()
+
+    let completedOn =
+      dd + '/' + mm + '/' + yyyy + ' at ' + hh + ':' + min + ':' + sec
+
+    let filteredItems = {
+      ...allTodos[index],
+      completedOn: completedOn,
+    }
+
+    let updatedCompleted = [...completedTodos]
+    updatedCompleted.push(filteredItems)
+    setCompletedTodos(updatedCompleted)
+    handleDelete(index)
+
+    localStorage.setItem('completedTodos', JSON.stringify(updatedCompleted))
+  }
+
+  const handleDeleteCompleted = (index) => {
+    let removeCompleted = [...completedTodos]
+    removeCompleted.splice(index, 1)
+
+    localStorage.setItem('completedTodos', JSON.stringify(removeCompleted))
+    setCompletedTodos(removeCompleted)
+  }
+
+  useEffect(() => {
+    let savedTodo = JSON.parse(localStorage.getItem('todolist'))
+    let savedCompleted = JSON.parse(localStorage.getItem('completedTodos'))
+
+    if (savedTodo) {
+      setTodos(savedTodo)
+    }
+
+    if (savedCompleted) {
+      setCompletedTodos(savedCompleted)
+    }
+  }, [])
 
   return (
     <div className='App'>
@@ -70,23 +129,56 @@ function App() {
           </button>
         </div>
         <div className='todo-list'>
-          {allTodos.map((item, index) => {
-            return (
-              <div className='todo-item' key={index}>
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
+          {isCompleted === false &&
+            allTodos.map((item, index) => {
+              return (
+                <div className='todo-item' key={index}>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </div>
+                  <div>
+                    <RiDeleteBin6Fill
+                      className='icon'
+                      onClick={() => handleDelete(index)}
+                      title='Delete?'
+                    />
+                    <TiInputChecked
+                      className='check-icon'
+                      onClick={() => handleCompleted(index)}
+                      title='Complete?'
+                    />
+                  </div>
                 </div>
-                <div>
-                  <RiDeleteBin6Fill className='icon' />
-                  <TiInputChecked
-                    className='check-icon'
-                    title='Do you want to complete it?'
-                  />
+              )
+            })}
+
+          {isCompleted === true &&
+            completedTodos.map((item, index) => {
+              return (
+                <div className='todo-item' key={index}>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                    <p>
+                      <small>Completed on: {item.completedOn}</small>
+                    </p>
+                  </div>
+                  <div>
+                    <RiDeleteBin6Fill
+                      className='icon'
+                      onClick={() => handleDeleteCompleted(index)}
+                      title='Delete?'
+                    />
+                    {/* <TiInputChecked
+                      className='check-icon'
+                      onClick={() => handleCompleted(index)}
+                      title='Complete?'
+                    /> */}
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
         </div>
       </div>
     </div>
