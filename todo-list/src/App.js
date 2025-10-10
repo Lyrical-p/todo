@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
 import { TiInputChecked } from 'react-icons/ti'
+import { AiOutlineEdit } from 'react-icons/ai'
 import './App.css'
 
 function App() {
@@ -11,6 +12,8 @@ function App() {
   const [newTitle, setNewTitle] = useState('')
   const [newDesc, setNewDesc] = useState('')
   const [completedTodos, setCompletedTodos] = useState([])
+  const [currentEdit, setCurrentEdit] = useState('')
+  const [currentEditedItem, setCurrentEditedItem] = useState('')
 
   const handleAddTodo = () => {
     let newTodo = {
@@ -81,6 +84,32 @@ function App() {
     }
   }, [])
 
+  const handleEdit = (ind, item) => {
+    setCurrentEdit(ind, item)
+    setCurrentEditedItem(item)
+  }
+
+  const handleUpdateTitle = (value) => {
+    setCurrentEditedItem((prev) => {
+      return { ...prev, title: value }
+    })
+  }
+
+  const handleUpdateDesc = (value) => {
+    setCurrentEditedItem((prev) => {
+      return { ...prev, description: value }
+    })
+  }
+
+  const handleUpdateDetails = () => {
+    let newdetails = [...allTodos]
+    newdetails[currentEdit] = currentEditedItem
+    setTodos(newdetails)
+    localStorage.setItem('todolist', JSON.stringify(newdetails))
+    setCurrentEdit('')
+    setCurrentEditedItem('')
+  }
+
   return (
     <div className='App'>
       <h1>My Todo List</h1>
@@ -131,26 +160,56 @@ function App() {
         <div className='todo-list'>
           {isCompleted === false &&
             allTodos.map((item, index) => {
-              return (
-                <div className='todo-item' key={index}>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p>{item.description}</p>
-                  </div>
-                  <div>
-                    <RiDeleteBin6Fill
-                      className='icon'
-                      onClick={() => handleDelete(index)}
-                      title='Delete?'
+              if (currentEdit === index) {
+                return (
+                  <div className='edit-wrapper' key={index}>
+                    <input
+                      placeholder='Update Title'
+                      onChange={(e) => handleUpdateTitle(e.target.value)}
+                      value={currentEditedItem.title}
                     />
-                    <TiInputChecked
-                      className='check-icon'
-                      onClick={() => handleCompleted(index)}
-                      title='Complete?'
+                    <textarea
+                      placeholder='Update Description'
+                      onChange={(e) => handleUpdateDesc(e.target.value)}
+                      rows={4}
+                      value={currentEditedItem.description}
                     />
+                    <button
+                      type='button'
+                      onClick={handleUpdateDetails}
+                      className='primaryBtn'
+                    >
+                      Update
+                    </button>
                   </div>
-                </div>
-              )
+                )
+              } else {
+                return (
+                  <div className='todo-item' key={index}>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.description}</p>
+                    </div>
+                    <div>
+                      <RiDeleteBin6Fill
+                        className='icon'
+                        onClick={() => handleDelete(index)}
+                        title='Delete?'
+                      />
+                      <TiInputChecked
+                        className='check-icon'
+                        onClick={() => handleCompleted(index)}
+                        title='Complete?'
+                      />
+                      <AiOutlineEdit
+                        className='check-icon'
+                        onClick={() => handleEdit(index, item)}
+                        title='Edit?'
+                      />
+                    </div>
+                  </div>
+                )
+              }
             })}
 
           {isCompleted === true &&
